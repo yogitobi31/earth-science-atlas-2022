@@ -1,0 +1,1 @@
+export default function Page(){return <main className="max-w-4xl mx-auto p-4 sm:p-8"><section className="glass-panel p-6"><h1 className="text-3xl font-bold">atmosphere</h1><p className="text-slate-300 mt-2">해당 모듈은 개념 탐색과 함께 확장됩니다.</p></section></main>;}

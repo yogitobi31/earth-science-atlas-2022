@@ -6,21 +6,27 @@ export const plateBoundaries = [
     type: "divergent" as BoundaryType,
     features: "두 판이 서로 멀어지며 맨틀 물질이 상승합니다.",
     landforms: "해령, 열곡대",
-    examPoint: "새로운 해양 지각이 생성되는 경계임을 구분하기"
+    quakeVolcano: "얕은 지진이 잦고 현무암질 화산 활동이 나타납니다.",
+    examPoint: "새로운 해양 지각이 생성되는 경계임을 구분",
+    misconception: "해령이 수렴형 경계에서 형성된다고 오해하기 쉽다"
   },
   {
     title: "수렴형 경계",
     type: "convergent" as BoundaryType,
-    features: "두 판이 서로 충돌해 한 판이 섭입하거나 산맥이 형성됩니다.",
+    features: "두 판이 충돌해 섭입 또는 습곡 작용이 일어납니다.",
     landforms: "해구, 화산호, 습곡 산맥",
-    examPoint: "해구-화산대 분포와 깊은 지진의 연관성 파악"
+    quakeVolcano: "천발~심발 지진과 폭발적 화산 활동이 동반될 수 있습니다.",
+    examPoint: "해구-화산대 분포와 깊은 지진의 연관성 파악",
+    misconception: "모든 수렴형 경계가 화산호를 만든다고 단정하면 오답"
   },
   {
     title: "보존형 경계",
     type: "transform" as BoundaryType,
     features: "두 판이 수평 방향으로 어긋나며 이동합니다.",
     landforms: "변환 단층, 선형 계곡",
-    examPoint: "지각 생성·소멸 없이 지진이 잦은 경계로 이해하기"
+    quakeVolcano: "강한 지진이 빈번하지만 판 생성/소멸은 없습니다.",
+    examPoint: "지각 생성·소멸 없이 지진이 잦은 경계로 이해",
+    misconception: "화산 활동이 항상 활발하다고 착각하기 쉽다"
   }
 ];
 
@@ -32,19 +38,7 @@ export const earthLayers = [
 ];
 
 export const misconceptions = [
-  {
-    statement: "화산은 아무 곳에서나 생긴다?",
-    correction: "대부분 판 경계나 열점처럼 마그마가 상승하기 쉬운 곳에서 집중적으로 형성됩니다.",
-    tip: "지도에서 화산대가 판 경계와 나란한지 확인하세요."
-  },
-  {
-    statement: "지진은 무작위로 발생한다?",
-    correction: "지진은 주로 단층과 판 경계에서 응력이 축적·방출될 때 반복적으로 발생합니다.",
-    tip: "최근 지진 분포를 판 경계 지도와 함께 보는 문제가 자주 출제됩니다."
-  },
-  {
-    statement: "대륙은 바다 위에 그냥 떠 있는 것이다?",
-    correction: "대륙과 해양 지각은 모두 암석권의 일부이며, 그 아래 연약권 위에서 함께 이동합니다.",
-    tip: "대륙 이동과 판 이동을 같은 맥락으로 연결해 정리하세요."
-  }
+  { statement: "모든 판 경계에서 화산 활동이 활발하다?", correction: "보존형 경계는 지진이 주로 나타나며 화산 활동은 제한적입니다.", tip: "경계 유형별 화산 분포를 지도로 확인하세요." },
+  { statement: "보존형 경계에서는 지진이 없다?", correction: "보존형 경계에서도 응력 축적으로 강한 지진이 발생합니다.", tip: "판의 생성/소멸 유무와 지진 발생은 별개입니다." },
+  { statement: "맨틀은 전부 액체다?", correction: "맨틀 대부분은 고체이지만 지질학적 시간 규모에서 점성 유동합니다.", tip: "외핵 액체, 내핵 고체를 함께 암기하세요." }
 ];
