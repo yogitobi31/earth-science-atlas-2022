@@ -3,7 +3,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const nav = [
-  ["홈", "/"], ["개념 탐색", "/concepts"], ["판 구조론", "/plate-tectonics"], ["대기권", "/atmosphere"], ["해양 순환", "/ocean-circulation"], ["H-R도", "/hr-diagram"], ["퀴즈", "/quiz"]
+  ["홈", "/"],
+  ["개념 탐색", "/concepts"],
+  ["판 구조론", "/plate-tectonics"],
+  ["퀴즈", "/quiz"]
 ] as const;
 
 export default function AppNav() {
