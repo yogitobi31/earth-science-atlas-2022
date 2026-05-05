@@ -1,19 +1,27 @@
 "use client";
-import { useState } from "react";
-import { quizQuestions } from "@/data/quiz";
+import { useMemo, useState } from "react";
+import { quizQuestions } from "@/data/quizzes";
 
 export default function Quiz() {
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
+  const [wrongDomains, setWrongDomains] = useState<string[]>([]);
   const [done, setDone] = useState(false);
 
   const q = quizQuestions[index];
+
+  const weaknesses = useMemo(() => {
+    const map = new Map<string, number>();
+    wrongDomains.forEach((d) => map.set(d, (map.get(d) ?? 0) + 1));
+    return [...map.entries()].sort((a, b) => b[1] - a[1]);
+  }, [wrongDomains]);
 
   const submit = (choice: number) => {
     if (selected !== null) return;
     setSelected(choice);
     if (choice === q.answer) setScore((s) => s + 1);
+    else setWrongDomains((prev) => [...prev, q.domain]);
   };
 
   const next = () => {
@@ -22,15 +30,16 @@ export default function Quiz() {
     setSelected(null);
   };
 
-  if (done) return <div className="glass-panel p-5 text-center">최종 점수: <span className="text-earth font-bold">{score}/{quizQuestions.length}</span></div>;
+  if (done)
+    return <div className="glass-panel p-5 space-y-2"><p>최종 점수: <span className="text-earth font-bold">{score}/{quizQuestions.length}</span></p><p className="text-sm text-slate-300">약점 영역: {weaknesses.length ? weaknesses.map(([k, v]) => `${k}(${v})`).join(", ") : "없음"}</p></div>;
 
   return (
     <div className="glass-panel p-5 space-y-4">
-      <p className="text-sm text-slate-300">문항 {index + 1} / {quizQuestions.length}</p>
+      <p className="text-sm text-slate-300">문항 {index + 1} / {quizQuestions.length} · {q.domain}</p>
       <h3 className="font-semibold">{q.question}</h3>
       <div className="space-y-2">
         {q.options.map((opt, i) => (
-          <button key={opt} onClick={() => submit(i)} className="w-full text-left p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 transition">
+          <button key={opt} onClick={() => submit(i)} className="w-full text-left p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 transition border border-white/10">
             {opt}
           </button>
         ))}
