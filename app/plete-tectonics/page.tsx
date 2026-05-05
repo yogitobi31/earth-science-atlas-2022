@@ -1,2 +1,5 @@
 import { redirect } from "next/navigation";
-export default function LegacyRoute(){redirect("/plate-tectonics");}
+
+export default function LegacyRoute() {
+  redirect("/learn/plate-tectonics");
+}
