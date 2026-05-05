@@ -15,3 +15,18 @@ body {
 .glass-panel {
   @apply bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl;
 }
+
+.mission-hero { background: linear-gradient(135deg, rgba(13,20,45,.9), rgba(9,31,49,.75), rgba(31,14,51,.72)); }
+.mission-card { transition: transform .25s ease, border-color .25s ease; }
+.mission-card:hover { transform: translateY(-2px); border-color: rgba(103,232,249,.65); }
+.tone-plate { background: linear-gradient(140deg, rgba(20,33,61,.85), rgba(18,88,110,.3)); }
+.tone-air { background: linear-gradient(140deg, rgba(16,34,72,.85), rgba(84,43,122,.3)); }
+.tone-star { background: linear-gradient(140deg, rgba(21,25,55,.85), rgba(105,42,99,.3)); }
+.plate-visual .arrow{position:absolute;width:60px;height:2px;background:#67e8f9;top:78px}
+.plate-visual .arrow::after{content:"";position:absolute;right:0;top:-4px;border:5px solid transparent;border-left-color:#67e8f9}
+.plate-visual .left{left:70px;transform:rotate(180deg)} .plate-visual .right{right:70px}
+.plate-visual .inward-left{left:80px}.plate-visual .inward-right{right:80px;transform:rotate(180deg)}
+.plate-visual .slide-left{left:80px;top:110px}.plate-visual .slide-right{right:80px;top:50px;transform:rotate(180deg)}
+.plate-visual .magma{position:absolute;left:50%;transform:translateX(-50%);bottom:42px;width:24px;height:60px;background:linear-gradient(to top,#fb7185,#f97316);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.plate-visual .subduct{position:absolute;right:120px;top:108px;width:120px;height:10px;background:#94a3b8;transform:rotate(27deg)}
+.plate-visual .fault{position:absolute;left:50%;top:50%;width:2px;height:130px;background:#e2e8f0;transform:translate(-50%,-50%) rotate(20deg)}
