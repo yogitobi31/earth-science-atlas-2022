@@ -1,6 +1,6 @@
 import type { Concept } from "@/types";
 
-export const concepts: Concept[] = [
+const baseConcepts = [
   { id: "plate-tectonics", title: "판 구조론", domain: "지권", summary: "암석권 판의 이동으로 지진·화산·산맥 형성을 설명한다.", explanation: "지구의 암석권은 여러 판으로 나뉘어 연약권 위를 이동한다. 판 경계에서 응력이 집중되어 다양한 지질 현상이 나타난다.", examPoints: ["판 경계 유형과 대표 지형 연결", "판 이동 원인으로 맨틀 대류·슬랩 당김 비교"], misconceptions: ["대륙이 바다를 가르며 이동한다는 과거 가설과 동일하지 않다", "모든 지진이 판 경계에서만 발생하지는 않는다"], relatedConcepts: ["divergent-boundary", "convergent-boundary", "transform-boundary", "mid-ocean-ridge", "ocean-trench"], tags: ["지권", "판", "지진", "화산", "경계"] },
   { id: "divergent-boundary", title: "발산형 경계", domain: "지권", summary: "판이 서로 멀어지며 새로운 지각이 만들어지는 경계다.", explanation: "발산형 경계에서는 맨틀 물질이 상승해 마그마가 식으며 해양 지각을 만든다. 대륙에서는 열곡이 발달할 수 있다.", examPoints: ["해령 중심부의 젊은 지각", "자기 줄무늬의 대칭성"], misconceptions: ["대륙 지각이 해령에서 만들어지는 것은 아니다"], relatedConcepts: ["plate-tectonics", "mid-ocean-ridge", "seafloor-spreading"], tags: ["발산", "해령", "해저확장"] },
   { id: "convergent-boundary", title: "수렴형 경계", domain: "지권", summary: "판이 서로 가까워지며 섭입대·조산대가 형성된다.", explanation: "밀도가 큰 해양판은 다른 판 아래로 섭입한다. 이 과정에서 해구, 화산호, 깊은 지진대가 발달한다.", examPoints: ["해구-화산호의 위치 관계", "베니오프대 지진 분포"], misconceptions: ["수렴형 경계가 항상 같은 형태의 산맥만 만드는 것은 아니다"], relatedConcepts: ["plate-tectonics", "ocean-trench", "fold-mountain"], tags: ["수렴", "섭입", "해구", "화산호"] },
@@ -71,3 +71,60 @@ export const concepts: Concept[] = [
   { id: "mesozoic", title: "중생대", domain: "지질 시대", summary: "공룡이 번성하고 말기에 대멸종이 일어난 시대다.", explanation: "트라이아스기·쥐라기·백악기로 나뉘며, 말기 충돌 사건과 화산 활동이 환경 변화를 일으켰다.", examPoints: ["중생대 3기 구분", "백악기 말 멸종"], misconceptions: ["포유류가 중생대에 전혀 없던 것은 아니다"], relatedConcepts: ["geologic-time-scale"], tags: ["중생대", "공룡", "백악기"] },
   { id: "cenozoic", title: "신생대", domain: "지질 시대", summary: "포유류와 인류가 번성한 현재까지의 시대다.", explanation: "기후 냉각과 빙하기 반복, 조산 운동이 진행되며 현대 생태계가 형성되었다.", examPoints: ["제4기 빙하기", "인류 출현 시기"], misconceptions: ["신생대가 지질 활동이 약한 시기라는 설명은 부정확하다"], relatedConcepts: ["geologic-time-scale"], tags: ["신생대", "빙하기", "인류"] }
 ];
+
+
+const enrichedOverrides: Partial<Record<string, Partial<Concept>>> = {
+  "earth-internal-energy": {},
+  "mantle-convection": {},
+  "plate-tectonics": { shortIntuition: "판은 정지된 지각이 아니라 이동하는 시스템이다.", roleInSystem: "지권 현상을 하나의 원인-결과 구조로 묶는 중심 이론", visualType: "plate-motion", cause: "맨틀 대류와 슬랩 당김", result: "판 경계 형성과 지진·화산 분포", previousConcepts: ["mantle"], nextConcepts: ["divergent-boundary","convergent-boundary","transform-boundary"], confusedWith:["continental-drift"] },
+  "divergent-boundary": { visualType:"divergent", cause:"판 분리", result:"해령 생성과 얕은 지진" },
+  "convergent-boundary": { visualType:"subduction", cause:"판 충돌", result:"해구·화산호·깊은 지진" },
+  "transform-boundary": { visualType:"transform", cause:"수평 전단", result:"단층 지진" },
+  "mid-ocean-ridge": { visualType:"ridge", cause:"발산형 경계 마그마 상승", result:"새 해양지각 생성" },
+  "ocean-trench": { visualType:"trench", cause:"해양판 섭입", result:"깊은 해구와 심발지진" },
+  "earthquake": { visualType:"seismic-wave", cause:"단층 파괴", result:"지진파 전달" },
+  "p-wave-s-wave": { visualType:"wave", cause:"지진 에너지 방출", result:"내부구조 추정" },
+  "earth-interior": { visualType:"earth-layers", cause:"밀도·조성 분화", result:"지각-맨틀-핵 층상 구조" },
+  "stratosphere": { visualType:"ozone", cause:"오존의 자외선 흡수", result:"기온 역전" },
+  "troposphere": { visualType:"atmos-column", cause:"지표 가열", result:"대류와 기상" },
+  "pressure": { visualType:"isobar", cause:"공기 무게 차이", result:"기압 경도력 발생" },
+  "coriolis-force": { visualType:"coriolis", cause:"지구 자전", result:"바람 편향" },
+  "global-circulation": { visualType:"circulation", cause:"복사 불균형+전향력", result:"행성 규모 순환" },
+  "temperate-cyclone": { visualType:"cyclone", cause:"중위도 전선 발달", result:"전선성 강수" },
+  "typhoon": { visualType:"typhoon", cause:"따뜻한 해수+잠열", result:"강한 열대 저기압" },
+  "stellar-color-temperature": { visualType:"stellar-spectrum", cause:"복사 스펙트럼", result:"색으로 온도 추정" },
+  "stellar-brightness": { visualType:"luminosity", cause:"광도와 거리", result:"관측 밝기 차이" },
+  "absolute-magnitude": { visualType:"magnitude", cause:"10pc 표준화", result:"고유 밝기 비교" },
+  "hr-diagram": { visualType:"hr-plot", cause:"온도-광도 좌표화", result:"별 분류와 진화 해석" },
+  "main-sequence": { visualType:"main-sequence", cause:"수소 핵융합 안정", result:"질량-수명 관계" },
+  "giant-star": { visualType:"giant", cause:"핵 수소 고갈", result:"반지름 팽창" },
+  "white-dwarf": { visualType:"white-dwarf", cause:"외곽층 방출 후 수축", result:"작고 뜨거운 잔해" },
+  "stellar-evolution": { visualType:"evolution", cause:"초기 질량 차이", result:"다른 종말 경로" }
+};
+
+
+const supplementalConcepts = [
+  { id:"earth-internal-energy", title:"지구 내부 에너지", domain:"지권", summary:"방사성 붕괴와 잔류열이 지구 내부를 가열한다.", explanation:"내부 에너지는 맨틀 대류와 판 운동의 근본 동력이다.", examPoints:["내부 열원 구분"], misconceptions:["태양열이 지구 내부 운동의 주원인이라는 오개념"], relatedConcepts:["mantle-convection"], tags:["지권","열"], shortIntuition:"보이지 않는 내부 열이 지권을 움직인다.", roleInSystem:"전체 판구조 흐름의 출발점", visualType:"core-heat", cause:"방사성 붕괴", result:"맨틀 대류 촉진", examPatterns:["열원-대류-판 이동 연결"], commonMistakes:["열이 지표에서만 온다고 착각"], previousConcepts:[], nextConcepts:["mantle-convection"], confusedWith:[] },
+  { id:"mantle-convection", title:"맨틀 대류", domain:"지권", summary:"맨틀의 느린 순환 운동", explanation:"뜨거운 물질 상승과 차가운 물질 하강이 반복된다.", examPoints:["대류 방향과 판 이동"], misconceptions:["맨틀이 완전 액체라는 오개념"], relatedConcepts:["plate-tectonics"], tags:["맨틀","대류"], shortIntuition:"천천히 도는 맨틀 컨베이어 벨트", roleInSystem:"판 이동의 직접 동력", visualType:"convection", cause:"내부 에너지", result:"판 이동", examPatterns:["대류 셀 해석"], commonMistakes:["속도가 빠르다고 착각"], previousConcepts:["earth-internal-energy"], nextConcepts:["plate-tectonics"], confusedWith:[] },
+  { id:"solar-radiation", title:"태양 복사", domain:"대기", summary:"대기와 지표 에너지의 근원", explanation:"단파 복사가 지구 에너지 수지를 만든다.", examPoints:["복사 평형"], misconceptions:["대기는 동일하게 가열된다는 오개념"], relatedConcepts:["surface-heating"], tags:["복사"], shortIntuition:"모든 기상은 태양 에너지에서 시작된다.", roleInSystem:"대기 시스템 출발점", visualType:"sun-rays", cause:"태양 복사 유입", result:"지표 가열", examPatterns:["단파/장파 구분"], commonMistakes:["복사가 직접 공기만 가열한다고 착각"], previousConcepts:[], nextConcepts:["surface-heating"], confusedWith:[] },
+  { id:"surface-heating", title:"지표 가열", domain:"대기", summary:"지표가 먼저 가열되고 공기를 데운다.", explanation:"전도·대류로 하층 대기가 가열된다.", examPoints:["지표 가열 메커니즘"], misconceptions:["상층부터 가열된다는 오개념"], relatedConcepts:["troposphere"], tags:["지표"], shortIntuition:"공기는 아래에서부터 데워진다.", roleInSystem:"대류권 기상 생성의 점화 단계", visualType:"surface-heat", cause:"태양 복사 흡수", result:"대류권 형성", examPatterns:["주간 기온 변화"], commonMistakes:["전도와 대류 혼동"], previousConcepts:["solar-radiation"], nextConcepts:["troposphere"], confusedWith:[] },
+  { id:"stellar-color", title:"별의 색", domain:"천문", summary:"별 색은 표면 온도를 반영", explanation:"청색일수록 고온, 적색일수록 저온이다.", examPoints:["색-온도 대응"], misconceptions:["빨강이 더 뜨겁다는 일상 직관"], relatedConcepts:["surface-temperature-star"], tags:["별색"], shortIntuition:"별의 색은 온도계다.", roleInSystem:"H-R도 해석의 기초", visualType:"stellar-spectrum", cause:"복사 스펙트럼", result:"온도 분류", examPatterns:["분광형 순서"], commonMistakes:["색을 밝기와 혼동"], previousConcepts:[], nextConcepts:["surface-temperature-star"], confusedWith:[] },
+  { id:"surface-temperature-star", title:"표면 온도", domain:"천문", summary:"별의 표면 온도는 분광형으로 추정", explanation:"온도는 H-R도 x축 해석의 핵심이다.", examPoints:["온도축 방향"], misconceptions:["오른쪽이 고온이라는 오개념"], relatedConcepts:["hr-diagram"], tags:["온도"], shortIntuition:"온도 위치를 읽으면 별 종류가 보인다.", roleInSystem:"별 분류의 좌표축", visualType:"temperature-axis", cause:"스펙트럼 분석", result:"H-R 위치 결정", examPatterns:["축 읽기 문제"], commonMistakes:["축 방향 반대로 해석"], previousConcepts:["stellar-color"], nextConcepts:["hr-diagram"], confusedWith:[] }
+] as Concept[];
+
+export const concepts: Concept[] = [...baseConcepts, ...supplementalConcepts].map((c: any) => {
+  const o = enrichedOverrides[c.id] ?? {};
+  return {
+    ...c,
+    shortIntuition: o.shortIntuition ?? c.summary,
+    roleInSystem: o.roleInSystem ?? c.explanation,
+    visualType: o.visualType ?? "generic",
+    cause: o.cause ?? c.summary,
+    result: o.result ?? c.explanation,
+    examPatterns: o.examPatterns ?? c.examPoints,
+    commonMistakes: o.commonMistakes ?? c.misconceptions,
+    previousConcepts: o.previousConcepts ?? [],
+    nextConcepts: o.nextConcepts ?? c.relatedConcepts,
+    confusedWith: o.confusedWith ?? [],
+  } as Concept;
+});

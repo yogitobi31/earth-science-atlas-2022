@@ -1,21 +1,70 @@
 "use client";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Concept, ConceptDomain } from "@/types";
 
-const domains: Array<"전체" | ConceptDomain> = ["전체", "지권", "대기", "해양", "천문", "지질 시대"];
-const domainColor: Record<ConceptDomain, string> = { 지권: "text-orange-300 border-orange-400/40", 대기: "text-cyan-300 border-cyan-400/40", 해양: "text-blue-300 border-blue-400/40", 천문: "text-violet-300 border-violet-400/40", "지질 시대": "text-emerald-300 border-emerald-400/40" };
+type DomainNode = { id: ConceptDomain; title: string };
+const domainNodes: DomainNode[] = [
+  { id: "지권", title: "지권 시스템" },
+  { id: "대기", title: "대기 시스템" },
+  { id: "해양", title: "해양 시스템" },
+  { id: "천문", title: "천문 시스템" },
+  { id: "지질 시대", title: "지질 시대" },
+];
+const flows: Record<ConceptDomain, string[][]> = {
+  "지권": [["earth-internal-energy"],["mantle-convection"],["plate-tectonics"],["divergent-boundary","convergent-boundary","transform-boundary"],["mid-ocean-ridge","ocean-trench","earthquake"],["p-wave-s-wave","earth-interior"]],
+  "대기": [["solar-radiation"],["surface-heating"],["troposphere"],["pressure"],["pressure-gradient-force"],["coriolis-force"],["global-circulation","temperate-cyclone","typhoon"],["stratosphere"]],
+  "해양": [["sea-surface-temperature"],["salinity"],["surface-circulation"],["thermohaline-circulation"],["upwelling"],["elnino","lanina"]],
+  "천문": [["stellar-brightness","stellar-color"],["surface-temperature-star"],["absolute-magnitude"],["hr-diagram"],["main-sequence","giant-star","white-dwarf"],["stellar-evolution"]],
+  "지질 시대": [["relative-age"],["absolute-age"],["radioactive-isotope"],["index-fossil","facies-fossil"],["geologic-time-scale"]],
+};
+
+function MiniVisual({ type }: { type: string }) { return <div className="h-24 rounded-xl border border-cyan-300/20 bg-slate-900/70 grid place-items-center text-cyan-200 text-xs">{type}</div>; }
 
 export default function ConceptsClient({ concepts, initialDomain }: { concepts: Concept[]; initialDomain?: ConceptDomain }) {
-  const safeDomain = initialDomain && domains.includes(initialDomain) ? initialDomain : "전체";
-  const [selectedDomain, setSelectedDomain] = useState<"전체" | ConceptDomain>(safeDomain);
+  const [domain, setDomain] = useState<ConceptDomain>(initialDomain ?? "지권");
   const [query, setQuery] = useState("");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const filtered = useMemo(() => concepts.filter((c) => (selectedDomain === "전체" || c.domain === selectedDomain) && (!query.trim() || [c.title, c.summary, c.explanation, c.tags.join(" ")].join(" ").toLowerCase().includes(query.toLowerCase()))), [selectedDomain, query, concepts]);
-  const selected = concepts.find((c) => c.id === selectedId) ?? filtered[0] ?? null;
-  const related = selected ? selected.relatedConcepts.map((id) => concepts.find((c) => c.id === id)).filter(Boolean) as Concept[] : [];
+  const byId = useMemo(() => Object.fromEntries(concepts.map((c) => [c.id, c])), [concepts]);
+  const domainFlow = flows[domain];
+  const flowIds = domainFlow.flat();
+  const matched = query.trim().toLowerCase();
+  const highlighted = new Set(concepts.filter((c) => [c.title, c.tags.join(" ")].join(" ").toLowerCase().includes(matched)).map((c) => c.id));
+  const [selectedId, setSelectedId] = useState(flowIds[0]);
+  const selected = byId[selectedId] ?? concepts[0];
 
-  return <main className="max-w-7xl mx-auto p-4 sm:p-8 space-y-5">{/* same UI */}
-    <section className="glass-panel p-5 sm:p-6 bg-gradient-to-br from-slate-900/80 via-indigo-950/30 to-cyan-950/20"><h1 className="text-3xl font-bold mb-4">개념 탐색</h1><p className="mb-4 text-sm text-slate-300">필요할 때 빠르게 확인하는 개념 라이브러리</p><div className="flex flex-wrap gap-2 mb-4">{domains.map((d) => <button key={d} onClick={() => setSelectedDomain(d)} className={`px-3 py-1.5 rounded-lg border text-sm ${selectedDomain === d ? "bg-earth/20 border-earth text-earth" : "border-white/15 hover:border-earth/60"}`}>{d}</button>)}</div><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="제목·요약·설명·태그 검색" className="w-full rounded-xl bg-slate-900/80 border border-white/15 px-4 py-3" /><p className="text-sm text-slate-400 mt-2">총 {filtered.length}개 개념</p></section>
-    <section className="grid lg:grid-cols-[1.2fr_1fr] gap-4"><div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">{filtered.map((c) => <article key={c.id} onClick={() => setSelectedId(c.id)} className={`glass-panel p-4 cursor-pointer border transition hover:shadow-glow ${selected?.id === c.id ? "border-earth" : "border-white/15"}`}><p className={`text-xs inline-flex px-2 py-0.5 rounded-full border ${domainColor[c.domain]}`}>{c.domain}</p><h3 className="font-semibold mt-2">{c.title}</h3><p className="text-sm text-slate-300 mt-2 leading-relaxed">{c.summary}</p></article>)}</div>{selected && <aside className="glass-panel p-5 border border-white/15 h-fit sticky top-4 space-y-4"><div><p className={`text-xs inline-flex px-2 py-0.5 rounded-full border ${domainColor[selected.domain]}`}>{selected.domain}</p><h2 className="text-2xl font-bold mt-2">{selected.title}</h2></div><div><h3 className="font-semibold text-earth">핵심 요약</h3><p className="text-slate-200 leading-relaxed">{selected.summary}</p></div><div><h3 className="font-semibold text-earth">쉬운 설명</h3><p className="text-slate-200 leading-relaxed">{selected.explanation}</p></div><div><h3 className="font-semibold text-earth">시험 포인트</h3><ul className="list-disc ml-5 text-slate-200 space-y-1">{selected.examPoints.map((p) => <li key={p}>{p}</li>)}</ul></div><div><h3 className="font-semibold text-earth">흔한 오개념</h3><ul className="list-disc ml-5 text-slate-200 space-y-1">{selected.misconceptions.map((m) => <li key={m}>{m}</li>)}</ul></div><div><h3 className="font-semibold text-earth">관련 개념</h3><div className="flex flex-wrap gap-2 mt-2">{related.map((r) => <button key={r.id} onClick={() => setSelectedId(r.id)} className="px-2.5 py-1 rounded-md border border-white/20 hover:border-earth/60 text-sm">{r.title}</button>)}</div></div><div><h3 className="font-semibold text-earth">태그</h3><div className="flex flex-wrap gap-2 mt-2">{selected.tags.map((t) => <span key={t} className="text-xs px-2 py-1 rounded bg-white/10 border border-white/10">#{t}</span>)}</div></div></aside>}</section>
+  return <main className="mx-auto max-w-7xl p-4 sm:p-8 space-y-6 text-slate-100">
+    <section className="rounded-3xl border border-cyan-300/20 bg-slate-950/85 p-6 backdrop-blur-xl">
+      <p className="text-xs tracking-[0.18em] text-cyan-200/80 mb-2">EARTH SCIENCE MAP</p>
+      <h1 className="text-3xl font-semibold">지구과학 구조 지도</h1>
+      <p className="text-slate-300 mt-2">외우기 전에, 개념들이 어떻게 연결되는지 먼저 보세요.</p>
+      <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="검색은 보조 기능입니다" className="mt-4 w-full sm:w-80 rounded-xl border border-white/15 bg-slate-900/80 px-3 py-2 text-sm" />
+      <div className="mt-5 grid sm:grid-cols-5 gap-3 relative">{domainNodes.map((n) => <button key={n.id} onClick={() => { setDomain(n.id); setSelectedId(flows[n.id].flat()[0]); }} className={`rounded-2xl border px-4 py-4 text-left transition ${domain===n.id?"border-cyan-300/70 bg-cyan-500/10 shadow-[0_0_28px_rgba(34,211,238,0.2)]":"border-violet-300/20 bg-white/5"}`}><p className="text-xs text-slate-400">구조 노드</p><p className="font-medium mt-1">{n.title}</p></button>)}</div>
+    </section>
+
+    <section className="grid lg:grid-cols-[1.5fr_1fr] gap-5">
+      <div className="rounded-3xl border border-white/10 bg-slate-950/80 p-4 sm:p-6">
+        <h2 className="text-lg mb-4">{domain} 개념 흐름</h2>
+        <div className="space-y-3">{domainFlow.map((row, i) => <div key={i} className="grid gap-3" style={{ gridTemplateColumns: `repeat(${row.length}, minmax(0,1fr))` }}>{row.map((id) => { const c = byId[id]; if (!c) return <div key={id} />; const active = selected.id===id; const hit = matched && highlighted.has(id); return <button key={id} onClick={() => setSelectedId(id)} className={`rounded-xl border px-3 py-3 text-left ${active?"border-cyan-300 bg-cyan-500/15":"border-white/10"} ${hit?"ring-1 ring-violet-300":"opacity-70"}`}><p className="text-sm font-medium">{c.title}</p><p className="text-xs text-slate-400 mt-1">{c.cause} → {c.result}</p></button>; })}</div>)}</div>
+      </div>
+
+      <aside className="rounded-3xl border border-white/10 bg-slate-950/80 p-5 space-y-4">
+        <h3 className="text-xl font-semibold">{selected.title}</h3>
+        <div><p className="text-xs text-cyan-200 mb-1">한 줄 직관</p><p>{selected.shortIntuition}</p></div>
+        <div><p className="text-xs text-cyan-200 mb-1">왜 중요한가</p><p className="text-sm text-slate-300">{selected.roleInSystem}</p></div>
+        <div><p className="text-xs text-cyan-200 mb-1">눈으로 이해하기</p><MiniVisual type={selected.visualType} /></div>
+        <div><p className="text-xs text-cyan-200 mb-1">시험에서는 이렇게 나온다</p><ul className="list-disc ml-5 text-sm">{selected.examPatterns.slice(0,3).map((p) => <li key={p}>{p}</li>)}</ul></div>
+        <div><p className="text-xs text-cyan-200 mb-1">자주 틀리는 이유</p><ul className="list-disc ml-5 text-sm">{selected.commonMistakes.slice(0,2).map((m) => <li key={m}>{m}</li>)}</ul></div>
+        <div><p className="text-xs text-cyan-200 mb-2">연결 개념</p><div className="flex flex-wrap gap-2">{[...selected.previousConcepts, ...selected.nextConcepts, ...selected.confusedWith].slice(0,6).map((id) => byId[id]).filter(Boolean).map((c) => <button key={c.id} onClick={() => setSelectedId(c.id)} className="px-2 py-1 text-xs rounded-md border border-white/20">{c.title}</button>)}</div></div>
+      </aside>
+    </section>
+
+    <section className="rounded-3xl border border-violet-300/20 bg-violet-950/20 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <button className="px-4 py-2 rounded-xl bg-cyan-400/20 border border-cyan-300/40">이 흐름으로 학습하기</button>
+      <div className="flex flex-wrap gap-2 text-sm">
+        <Link href="/learn/plate-tectonics" className="underline">판 구조론 미션으로 이동</Link>
+        <Link href="/learn/atmosphere" className="underline">대기권 구조 미션으로 이동</Link>
+        <Link href="/learn/hr-diagram" className="underline">H-R도 미션으로 이동</Link>
+      </div>
+    </section>
   </main>;
 }
