@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 
 type BoundaryKey = "divergent" | "convergent" | "transform";
-
 type QuizOption = { id: string; text: string; correct?: boolean };
 
 type BoundaryContent = {
@@ -14,113 +13,89 @@ type BoundaryContent = {
   hazard: string;
   examPoints: string[];
   misconception: string;
-  quiz: {
-    question: string;
-    explanation: string;
-    options: QuizOption[];
-  };
+  quiz: { question: string; explanation: string; options: QuizOption[] };
 };
 
 const boundaryData: Record<BoundaryKey, BoundaryContent> = {
   divergent: {
     label: "발산형 경계",
-    coreSentence: "판이 벌어지면 맨틀 물질이 상승하고, 새로운 지각이 만들어집니다.",
-    principle: "두 판이 서로 멀어지며 지각이 생성됩니다.",
+    coreSentence: "벌어지는 틈으로 맨틀 물질이 상승해 새로운 해양 지각이 만들어집니다.",
+    principle: "두 판이 서로 멀어지며 중앙에서 지각이 생성됩니다.",
     landforms: "해령, 열곡대",
-    hazard: "얕은 지진, 화산 활동 가능",
-    examPoints: ["해령은 발산형 경계에서 형성된다.", "새로운 해양 지각이 만들어질 수 있다."],
-    misconception: "판이 멀어지면 빈 공간이 생기는 것이 아니라 맨틀 물질이 올라와 채워진다.",
-    quiz: {
-      question: "해령이 주로 형성되는 판 경계는?",
-      options: [
-        { id: "1", text: "발산형 경계", correct: true },
-        { id: "2", text: "수렴형 경계" },
-        { id: "3", text: "보존형 경계" },
-        { id: "4", text: "판 내부" },
-      ],
-      explanation: "해령은 판이 벌어지는 곳에서 맨틀 물질이 상승하며 새로운 해양 지각이 만들어질 때 형성됩니다.",
-    },
+    hazard: "얕은 지진 중심, 화산 활동 동반 가능",
+    examPoints: ["해령은 발산형 경계에서 형성된다.", "새로운 해양 지각이 중앙에서 지속적으로 생성될 수 있다."],
+    misconception: "판이 멀어지면 빈 공간만 생기는 것이 아니라 맨틀이 상승해 공간을 채운다.",
+    quiz: { question: "새 해양 지각이 주로 생성되는 곳은?", explanation: "발산형 경계 중앙의 해령/열곡에서 맨틀 물질이 상승해 새 지각이 형성됩니다.", options: [{ id: "1", text: "발산형 경계", correct: true }, { id: "2", text: "수렴형 경계" }, { id: "3", text: "보존형 경계" }, { id: "4", text: "대륙 내부" }] },
   },
   convergent: {
     label: "수렴형 경계",
-    coreSentence: "해양판이 다른 판 아래로 들어가며 해구, 화산, 깊은 지진이 함께 나타납니다.",
-    principle: "판이 가까워지며 섭입/충돌이 발생합니다.",
+    coreSentence: "해양판이 대륙판 아래로 섭입하며 해구, 화산호, 깊어지는 지진대가 함께 나타납니다.",
+    principle: "판이 서로 다가오며 한 판이 다른 판 아래로 내려갑니다.",
     landforms: "해구, 화산호, 습곡 산맥",
-    hazard: "얕은 지진부터 깊은 지진까지, 화산 활동 활발",
-    examPoints: ["해구는 주로 수렴형 경계에서 형성된다.", "섭입대에서는 진원의 깊이가 다양하게 나타난다."],
-    misconception: "모든 수렴형 경계에서 같은 지형이 생기는 것은 아니다.",
-    quiz: {
-      question: "섭입대로 인해 깊은 지진대가 잘 나타나는 경계는?",
-      options: [
-        { id: "1", text: "발산형 경계" },
-        { id: "2", text: "수렴형 경계", correct: true },
-        { id: "3", text: "보존형 경계" },
-        { id: "4", text: "판 내부" },
-      ],
-      explanation: "수렴형 경계의 섭입대에서는 천발부터 심발까지 다양한 깊이의 지진이 분포합니다.",
-    },
+    hazard: "얕은 지진부터 깊은 지진까지 분포, 화산 활동 활발",
+    examPoints: ["해구와 화산호는 섭입이 있는 수렴형 경계의 대표 지형이다.", "수렴형에서는 진원 깊이가 얕은 곳에서 깊은 곳으로 증가한다."],
+    misconception: "모든 수렴형 경계가 같은 지형을 만드는 것은 아니며 섭입 여부에 따라 다르다.",
+    quiz: { question: "깊은 지진이 잘 나타나는 경계는?", explanation: "섭입판을 따라 지진이 얕은 곳에서 깊은 곳으로 배열되는 수렴형 경계입니다.", options: [{ id: "1", text: "발산형 경계" }, { id: "2", text: "수렴형 경계", correct: true }, { id: "3", text: "보존형 경계" }, { id: "4", text: "판 내부" }] },
   },
   transform: {
     label: "보존형 경계",
-    coreSentence: "판이 서로 스쳐 지나가므로 지각이 생성되거나 소멸하지 않지만 지진은 자주 발생합니다.",
-    principle: "판이 반대 방향으로 어긋나며 수평 이동합니다.",
-    landforms: "변환 단층, 산안드레아스 단층",
-    hazard: "지진은 자주 발생하지만 화산 활동은 상대적으로 적음",
-    examPoints: ["보존형 경계에서는 판의 생성이나 소멸이 없다.", "지진은 발생하지만 해령/해구가 대표적으로 형성되지는 않는다."],
-    misconception: "보존형 경계는 활동이 없는 경계가 아니다. 지진이 자주 발생할 수 있다.",
-    quiz: {
-      question: "판의 생성·소멸 없이 지진이 잦은 경계는?",
-      options: [
-        { id: "1", text: "발산형 경계" },
-        { id: "2", text: "수렴형 경계" },
-        { id: "3", text: "보존형 경계", correct: true },
-        { id: "4", text: "판 내부" },
-      ],
-      explanation: "보존형 경계는 판이 스쳐 지나가며 응력이 축적되어 지진이 잦지만 지각은 생성/소멸하지 않습니다.",
-    },
+    coreSentence: "두 판이 어긋나며 미끄러져 지각 생성·소멸은 없지만 단층을 따라 지진이 자주 납니다.",
+    principle: "판이 수평으로 반대 방향 이동하며 응력이 축적됩니다.",
+    landforms: "변환 단층, 선형 단층대",
+    hazard: "단층선 지진 빈번, 화산 활동은 상대적으로 제한적",
+    examPoints: ["보존형 경계에서는 지각 생성/소멸이 없다.", "지진은 단층선을 따라 집중된다."],
+    misconception: "보존형은 '조용한 경계'가 아니며 강한 지진이 발생할 수 있다.",
+    quiz: { question: "생성·소멸 없이 지진이 잦은 경계는?", explanation: "판이 서로 스치며 이동하는 보존형 경계에서는 응력 축적으로 지진이 자주 발생합니다.", options: [{ id: "1", text: "발산형 경계" }, { id: "2", text: "수렴형 경계" }, { id: "3", text: "보존형 경계", correct: true }, { id: "4", text: "해령 중심부" }] },
   },
 };
 
 function BoundaryVisualization({ mode }: { mode: BoundaryKey }) {
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-slate-950/80 p-4 sm:p-6">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(45,212,191,.15),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(59,130,246,.12),transparent_45%),radial-gradient(circle_at_50%_100%,rgba(168,85,247,.15),transparent_40%)]" />
+    <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-slate-950/85 p-4 sm:p-6">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(34,211,238,.13),transparent_42%),radial-gradient(circle_at_80%_20%,rgba(59,130,246,.14),transparent_45%),radial-gradient(circle_at_50%_100%,rgba(139,92,246,.14),transparent_40%)]" />
       <svg viewBox="0 0 900 460" className="relative h-[280px] w-full sm:h-[340px]">
         <defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-        <rect x="0" y="0" width="900" height="460" fill="transparent" />
-        <line x1="0" y1="120" x2="900" y2="120" stroke="#7dd3fc" opacity="0.35" strokeDasharray="8 8" />
+        <line x1="0" y1="120" x2="900" y2="120" stroke="#7dd3fc" opacity="0.25" strokeDasharray="8 8" />
 
         {mode === "divergent" && <>
-          <polygon points="60,150 430,150 360,360 20,360" fill="#1e293b" stroke="#38bdf8" strokeOpacity="0.25" />
-          <polygon points="470,150 840,150 880,360 540,360" fill="#1e293b" stroke="#38bdf8" strokeOpacity="0.25" />
-          <path d="M450 340 C430 290 430 240 450 170 C470 240 470 290 450 340" fill="#fb923c" fillOpacity="0.85" filter="url(#glow)" />
-          <path d="M420 152 L260 152" stroke="#67e8f9" strokeWidth="6" /><polygon points="250,152 270,140 270,164" fill="#67e8f9" />
-          <path d="M480 152 L640 152" stroke="#67e8f9" strokeWidth="6" /><polygon points="650,152 630,140 630,164" fill="#67e8f9" />
-          <text x="450" y="140" fill="#fca5a5" textAnchor="middle" fontSize="18">해령/열곡</text>
+          <polygon points="40,150 420,150 340,360 10,360" fill="#1f2937" stroke="#67e8f9" strokeOpacity="0.25" />
+          <polygon points="480,150 860,150 890,360 560,360" fill="#1f2937" stroke="#67e8f9" strokeOpacity="0.25" />
+          <path d="M450 350 C430 302 425 225 450 155 C475 225 470 302 450 350" fill="#fb923c" fillOpacity="0.9" filter="url(#glow)" />
+          <path d="M442 145 L450 118 L458 145" fill="#fda4af" opacity="0.9" />
+          <line x1="420" y1="152" x2="250" y2="152" stroke="#67e8f9" strokeWidth="6" /><polygon points="240,152 260,140 260,164" fill="#67e8f9" />
+          <line x1="480" y1="152" x2="650" y2="152" stroke="#67e8f9" strokeWidth="6" /><polygon points="660,152 640,140 640,164" fill="#67e8f9" />
+          <line x1="437" y1="150" x2="437" y2="360" stroke="#bae6fd" strokeWidth="2" opacity="0.8" />
+          <line x1="463" y1="150" x2="463" y2="360" stroke="#bae6fd" strokeWidth="2" opacity="0.8" />
+          <text x="450" y="140" fill="#f0abfc" textAnchor="middle" fontSize="16">해령 / 열곡</text>
+          <text x="450" y="375" fill="#fdba74" textAnchor="middle" fontSize="14">상승 맨틀 · 새 해양 지각</text>
         </>}
 
         {mode === "convergent" && <>
-          <polygon points="40,150 420,150 350,360 10,360" fill="#334155" stroke="#38bdf8" strokeOpacity="0.25" />
-          <polygon points="470,150 870,150 900,360 560,360" fill="#475569" stroke="#38bdf8" strokeOpacity="0.25" />
-          <polygon points="520,165 400,360 475,360 605,185" fill="#64748b" />
-          <path d="M420 148 L300 148" stroke="#67e8f9" strokeWidth="6" /><polygon points="290,148 310,136 310,160" fill="#67e8f9" />
-          <path d="M500 148 L620 148" stroke="#67e8f9" strokeWidth="6" /><polygon points="630,148 610,136 610,160" fill="#67e8f9" />
-          <path d="M340 150 C350 130 360 130 370 150" stroke="#f97316" strokeWidth="6" fill="none" filter="url(#glow)"/>
-          <circle cx="450" cy="230" r="5" fill="#c4b5fd" /><circle cx="490" cy="275" r="5" fill="#c4b5fd" /><circle cx="530" cy="315" r="5" fill="#c4b5fd" />
-          <text x="350" y="130" fill="#fca5a5" fontSize="18">화산호</text><text x="520" y="182" fill="#93c5fd" fontSize="18">해구/섭입대</text>
+          <polygon points="35,150 500,150 520,360 20,360" fill="#334155" stroke="#7dd3fc" strokeOpacity="0.25" />
+          <path d="M530 150 L890 150 L900 360 L560 360 Z" fill="#475569" stroke="#7dd3fc" strokeOpacity="0.25" />
+          <path d="M508 165 C560 210 585 265 635 360 L700 360 C635 265 592 205 536 162 Z" fill="#64748b" opacity="0.95" />
+          <path d="M500 150 Q520 168 546 170" stroke="#93c5fd" strokeWidth="4" fill="none" />
+          <path d="M612 150 C618 134 626 132 632 150 M636 150 C642 132 650 132 656 150" stroke="#fb923c" strokeWidth="5" fill="none" filter="url(#glow)" />
+          <circle cx="542" cy="188" r="4" fill="#c4b5fd" /><circle cx="575" cy="222" r="4.4" fill="#c4b5fd" /><circle cx="610" cy="261" r="4.8" fill="#c4b5fd" /><circle cx="647" cy="305" r="5.2" fill="#c4b5fd" />
+          <line x1="500" y1="148" x2="390" y2="148" stroke="#67e8f9" strokeWidth="6" /><polygon points="380,148 400,136 400,160" fill="#67e8f9" />
+          <line x1="560" y1="148" x2="670" y2="148" stroke="#67e8f9" strokeWidth="6" /><polygon points="680,148 660,136 660,160" fill="#67e8f9" />
+          <text x="550" y="178" fill="#93c5fd" fontSize="15">해구</text>
+          <text x="645" y="128" fill="#fdba74" fontSize="15">화산호</text>
+          <text x="662" y="320" fill="#c4b5fd" fontSize="14">깊어지는 지진대</text>
         </>}
 
         {mode === "transform" && <>
-          <polygon points="40,150 430,150 390,360 10,360" fill="#334155" stroke="#38bdf8" strokeOpacity="0.25" />
-          <polygon points="470,150 860,150 900,360 510,360" fill="#334155" stroke="#38bdf8" strokeOpacity="0.25" />
-          <line x1="450" y1="130" x2="450" y2="370" stroke="#e2e8f0" strokeWidth="3" strokeDasharray="10 8" />
-          <path d="M340 190 L430 190" stroke="#67e8f9" strokeWidth="6" /><polygon points="438,190 418,178 418,202" fill="#67e8f9" />
-          <path d="M560 230 L470 230" stroke="#67e8f9" strokeWidth="6" /><polygon points="462,230 482,218 482,242" fill="#67e8f9" />
-          <circle cx="430" cy="250" r="5" fill="#f59e0b" /><circle cx="470" cy="270" r="5" fill="#f59e0b" /><circle cx="450" cy="300" r="5" fill="#f59e0b" />
-          <text x="450" y="120" fill="#cbd5e1" textAnchor="middle" fontSize="18">변환 단층</text>
+          <rect x="40" y="150" width="385" height="210" fill="#334155" stroke="#67e8f9" strokeOpacity="0.2" />
+          <rect x="475" y="150" width="385" height="210" fill="#334155" stroke="#67e8f9" strokeOpacity="0.2" />
+          <path d="M450 145 L440 170 L460 198 L442 226 L460 254 L440 282 L458 310 L445 335" stroke="#e2e8f0" strokeWidth="4" fill="none" strokeDasharray="10 8" />
+          <line x1="330" y1="210" x2="420" y2="210" stroke="#67e8f9" strokeWidth="6" /><polygon points="428,210 408,198 408,222" fill="#67e8f9" />
+          <line x1="570" y1="250" x2="480" y2="250" stroke="#67e8f9" strokeWidth="6" /><polygon points="472,250 492,238 492,262" fill="#67e8f9" />
+          <circle cx="440" cy="184" r="4" fill="#f59e0b" /><circle cx="456" cy="218" r="4" fill="#f59e0b" /><circle cx="444" cy="252" r="4" fill="#f59e0b" /><circle cx="456" cy="286" r="4" fill="#f59e0b" />
+          <text x="452" y="132" fill="#cbd5e1" textAnchor="middle" fontSize="16">변환 단층선</text>
+          <text x="452" y="356" fill="#fcd34d" textAnchor="middle" fontSize="14">지각 생성/소멸 없음 · 단층 지진 집중</text>
         </>}
       </svg>
-      <p className="relative mt-2 text-xs text-slate-300">세 경계를 전환해 화살표 방향, 지형, 지진 분포를 비교해보세요.</p>
+      <p className="relative mt-2 text-xs text-slate-300">3초 비교 포인트: 화살표 방향 → 판의 움직임, 중앙 구조 → 지각 변화, 점 배열 → 지진 분포.</p>
     </div>
   );
 }
@@ -146,17 +121,18 @@ export default function PlateTectonicsExplorer() {
         <aside className="glass-panel space-y-3 p-4 sm:p-5">
           <h3 className="text-xl font-semibold">{current.label}</h3>
           <p className="text-cyan-100">{current.coreSentence}</p>
-          <div className="space-y-2 text-sm text-slate-200">
-            <p><span className="text-slate-400">핵심 원리</span><br />{current.principle}</p>
-            <p><span className="text-slate-400">대표 지형</span><br />{current.landforms}</p>
-            <p><span className="text-slate-400">지진/화산 특징</span><br />{current.hazard}</p>
-          </div>
+          {[ ["한 줄 원리", current.principle], ["대표 지형", current.landforms], ["지진/화산 특징", current.hazard], ["시험 포인트", current.examPoints[0]], ["오개념 주의", current.misconception] ].map(([title, body]) => (
+            <div key={title as string} className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+              <p className="text-xs uppercase tracking-[0.12em] text-slate-400">{title}</p>
+              <p className="mt-1 text-sm text-slate-100">• {body}</p>
+            </div>
+          ))}
         </aside>
       </div>
 
       <div className="grid gap-3 md:grid-cols-2">
-        <details className="glass-panel p-4" open><summary className="cursor-pointer text-sm text-cyan-200">시험 포인트</summary><ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-slate-200">{current.examPoints.map((point) => <li key={point}>{point}</li>)}</ul></details>
-        <details className="glass-panel p-4"><summary className="cursor-pointer text-sm text-amber-200">오개념 주의</summary><p className="mt-3 text-sm text-slate-200">{current.misconception}</p></details>
+        <details className="glass-panel p-4" open><summary className="cursor-pointer text-sm text-cyan-200">시험 포인트 더 보기</summary><ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-slate-200">{current.examPoints.map((point) => <li key={point}>{point}</li>)}</ul></details>
+        <details className="glass-panel p-4"><summary className="cursor-pointer text-sm text-amber-200">오개념 체크</summary><p className="mt-3 text-sm text-slate-200">{current.misconception}</p></details>
       </div>
 
       <section className="glass-panel space-y-3 p-4 sm:p-5">
@@ -169,12 +145,7 @@ export default function PlateTectonicsExplorer() {
             </button>
           ))}
         </div>
-        {selected && (
-          <div className={`rounded-xl border px-3 py-3 text-sm ${result?.correct ? "border-emerald-300/50 bg-emerald-500/10 text-emerald-100" : "border-rose-300/40 bg-rose-500/10 text-rose-100"}`}>
-            <p className="font-medium">{result?.correct ? "정답입니다." : "다시 생각해보세요."}</p>
-            <p className="mt-1 text-slate-200">해설: {current.quiz.explanation}</p>
-          </div>
-        )}
+        {selected && <div className={`rounded-xl border px-3 py-3 text-sm ${result?.correct ? "border-emerald-300/50 bg-emerald-500/10 text-emerald-100" : "border-rose-300/40 bg-rose-500/10 text-rose-100"}`}><p className="font-medium">{result?.correct ? "정답입니다." : "다시 생각해보세요."}</p><p className="mt-1 text-slate-200">해설: {current.quiz.explanation}</p></div>}
       </section>
     </div>
   );
