@@ -3,9 +3,9 @@ import MissionCard from "@/components/MissionCard";
 import InsightCard from "@/components/InsightCard";
 
 const missions = [
-  { title: "움직이는 지구: 판 구조론", subtitle: "경계 유형을 비교해 지진과 화산 분포의 원인을 파악합니다.", href: "/learn/plate-tectonics", tone: "tone-plate" },
-  { title: "층을 이룬 대기: 대기권 구조", subtitle: "층별 온도 경향이 왜 교대로 바뀌는지 시각적으로 확인합니다.", href: "/learn/atmosphere", tone: "tone-air" },
-  { title: "별의 지도: H-R도", subtitle: "온도·광도의 관계로 별의 위치와 진화를 직관적으로 이해합니다.", href: "/learn/hr-diagram", tone: "tone-star" }
+  { title: "움직이는 지구: 판 구조론", subtitle: "경계 유형을 비교해 지진과 화산 분포의 원인을 파악합니다.", href: "/learn/plate-tectonics", tone: "tone-plate", imagePath: "/visuals/card-plate-tectonics.png" },
+  { title: "층을 이룬 대기: 대기권 구조", subtitle: "층별 온도 경향이 왜 교대로 바뀌는지 시각적으로 확인합니다.", href: "/learn/atmosphere", tone: "tone-air", imagePath: "/visuals/card-atmosphere.png" },
+  { title: "별의 지도: H-R도", subtitle: "온도·광도의 관계로 별의 위치와 진화를 직관적으로 이해합니다.", href: "/learn/hr-diagram", tone: "tone-star", imagePath: "/visuals/card-hr-diagram.png" }
 ];
 
 export default function HomePage() {
