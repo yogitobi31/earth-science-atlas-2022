@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import CheckQuestion from "./CheckQuestion";
+import { questions } from "@/data/questions";
 
 type BoundaryKey = "divergent" | "convergent" | "transform";
 type QuizOption = { id: string; text: string; correct?: boolean };
@@ -13,7 +15,7 @@ type BoundaryContent = {
   hazard: string;
   examPoints: string[];
   misconception: string;
-  quiz: { question: string; explanation: string; options: QuizOption[] };
+  conceptId: string;
 };
 
 const boundaryData: Record<BoundaryKey, BoundaryContent> = {
@@ -25,7 +27,7 @@ const boundaryData: Record<BoundaryKey, BoundaryContent> = {
     hazard: "얕은 지진 중심, 화산 활동 동반 가능",
     examPoints: ["해령은 발산형 경계에서 형성된다.", "새로운 해양 지각이 중앙에서 지속적으로 생성될 수 있다."],
     misconception: "판이 멀어지면 빈 공간만 생기는 것이 아니라 맨틀이 상승해 공간을 채운다.",
-    quiz: { question: "새 해양 지각이 주로 생성되는 곳은?", explanation: "발산형 경계 중앙의 해령/열곡에서 맨틀 물질이 상승해 새 지각이 형성됩니다.", options: [{ id: "1", text: "발산형 경계", correct: true }, { id: "2", text: "수렴형 경계" }, { id: "3", text: "보존형 경계" }, { id: "4", text: "대륙 내부" }] },
+    conceptId: "plate-boundaries",
   },
   convergent: {
     label: "수렴형 경계",
@@ -35,7 +37,7 @@ const boundaryData: Record<BoundaryKey, BoundaryContent> = {
     hazard: "얕은 지진부터 깊은 지진까지 분포, 화산 활동 활발",
     examPoints: ["해구와 화산호는 섭입이 있는 수렴형 경계의 대표 지형이다.", "수렴형에서는 진원 깊이가 얕은 곳에서 깊은 곳으로 증가한다."],
     misconception: "모든 수렴형 경계가 같은 지형을 만드는 것은 아니며 섭입 여부에 따라 다르다.",
-    quiz: { question: "깊은 지진이 잘 나타나는 경계는?", explanation: "섭입판을 따라 지진이 얕은 곳에서 깊은 곳으로 배열되는 수렴형 경계입니다.", options: [{ id: "1", text: "발산형 경계" }, { id: "2", text: "수렴형 경계", correct: true }, { id: "3", text: "보존형 경계" }, { id: "4", text: "판 내부" }] },
+    conceptId: "subduction",
   },
   transform: {
     label: "보존형 경계",
@@ -45,7 +47,7 @@ const boundaryData: Record<BoundaryKey, BoundaryContent> = {
     hazard: "단층선 지진 빈번, 화산 활동은 상대적으로 제한적",
     examPoints: ["보존형 경계에서는 지각 생성/소멸이 없다.", "지진은 단층선을 따라 집중된다."],
     misconception: "보존형은 '조용한 경계'가 아니며 강한 지진이 발생할 수 있다.",
-    quiz: { question: "생성·소멸 없이 지진이 잦은 경계는?", explanation: "판이 서로 스치며 이동하는 보존형 경계에서는 응력 축적으로 지진이 자주 발생합니다.", options: [{ id: "1", text: "발산형 경계" }, { id: "2", text: "수렴형 경계" }, { id: "3", text: "보존형 경계", correct: true }, { id: "4", text: "해령 중심부" }] },
+    conceptId: "transform-fault",
   },
 };
 
@@ -102,15 +104,14 @@ function BoundaryVisualization({ mode }: { mode: BoundaryKey }) {
 
 export default function PlateTectonicsExplorer() {
   const [mode, setMode] = useState<BoundaryKey>("divergent");
-  const [selected, setSelected] = useState<string | null>(null);
   const current = useMemo(() => boundaryData[mode], [mode]);
-  const result = current.quiz.options.find((opt) => opt.id === selected);
+  const question = questions.find((q) => q.conceptId === current.conceptId)!;
 
   return (
     <div className="space-y-6">
       <div className="grid gap-2 sm:grid-cols-3">
         {(Object.keys(boundaryData) as BoundaryKey[]).map((key) => (
-          <button key={key} onClick={() => { setMode(key); setSelected(null); }} className={`rounded-2xl border px-4 py-3 text-sm transition ${mode === key ? "border-cyan-300 bg-cyan-400/15 text-cyan-100" : "border-white/15 bg-white/5 text-slate-300 hover:border-cyan-500/40"}`}>
+          <button key={key} onClick={() => { setMode(key); }} className={`rounded-2xl border px-4 py-3 text-sm transition ${mode === key ? "border-cyan-300 bg-cyan-400/15 text-cyan-100" : "border-white/15 bg-white/5 text-slate-300 hover:border-cyan-500/40"}`}>
             {boundaryData[key].label}
           </button>
         ))}
@@ -135,18 +136,8 @@ export default function PlateTectonicsExplorer() {
         <details className="glass-panel p-4"><summary className="cursor-pointer text-sm text-amber-200">오개념 체크</summary><p className="mt-3 text-sm text-slate-200">{current.misconception}</p></details>
       </div>
 
-      <section className="glass-panel space-y-3 p-4 sm:p-5">
-        <p className="text-xs uppercase tracking-[0.16em] text-slate-300">확인 문제</p>
-        <p className="text-sm sm:text-base">{current.quiz.question}</p>
-        <div className="grid gap-2 sm:grid-cols-2">
-          {current.quiz.options.map((opt) => (
-            <button key={opt.id} onClick={() => setSelected(opt.id)} className={`rounded-xl border px-3 py-2 text-left text-sm ${selected === opt.id ? "border-violet-300 bg-violet-400/15" : "border-white/15 bg-white/5"}`}>
-              {opt.id}. {opt.text}
-            </button>
-          ))}
-        </div>
-        {selected && <div className={`rounded-xl border px-3 py-3 text-sm ${result?.correct ? "border-emerald-300/50 bg-emerald-500/10 text-emerald-100" : "border-rose-300/40 bg-rose-500/10 text-rose-100"}`}><p className="font-medium">{result?.correct ? "정답입니다." : "다시 생각해보세요."}</p><p className="mt-1 text-slate-200">해설: {current.quiz.explanation}</p></div>}
-      </section>
+      <CheckQuestion question={question} />
+
     </div>
   );
 }
