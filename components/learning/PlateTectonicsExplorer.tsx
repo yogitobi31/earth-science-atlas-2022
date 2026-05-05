@@ -16,11 +16,34 @@ export default function PlateTectonicsExplorer() {
   const current = useMemo(() => data[mode], [mode]);
   return <div className="space-y-4">
     <div className="flex flex-wrap gap-2">{(Object.keys(data) as Key[]).map((k) => <button key={k} onClick={() => setMode(k)} className={`px-3 py-2 rounded-full border text-sm ${mode===k?"border-cyan-300 bg-cyan-500/20":"border-white/20"}`}>{data[k].label}</button>)}</div>
-    <div className="plate-visual h-56 rounded-2xl border border-white/15 p-4 relative overflow-hidden">
-      <div className="absolute inset-x-6 top-20 border-t border-white/20" />
-      {mode === "divergent" && <><div className="arrow left"/><div className="arrow right"/><div className="magma"/><p className="absolute left-4 bottom-3 text-xs">해령 / 열곡</p></>}
-      {mode === "convergent" && <><div className="arrow inward-left"/><div className="arrow inward-right"/><div className="subduct"/><p className="absolute left-4 bottom-3 text-xs">해구 · 화산 · 깊은 지진대</p></>}
-      {mode === "transform" && <><div className="arrow slide-left"/><div className="arrow slide-right"/><div className="fault"/><p className="absolute left-4 bottom-3 text-xs">변환 단층 · 잦은 지진</p></>}
+    <div className="plate-visual h-64 rounded-2xl border border-white/15 p-4 relative overflow-hidden bg-slate-950/60">
+      <svg viewBox="0 0 520 260" className="w-full h-full">
+        <rect x="0" y="0" width="520" height="260" fill="url(#bgPlate)" />
+        <defs>
+          <linearGradient id="bgPlate" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#0f172a" />
+            <stop offset="1" stopColor="#1e293b" />
+          </linearGradient>
+        </defs>
+        <line x1="0" y1="110" x2="520" y2="110" stroke="#94a3b8" strokeDasharray="5 5" opacity="0.5" />
+        {mode === "divergent" && <>
+          <polygon points="110,120 250,120 220,185 80,185" fill="#334155" /><polygon points="270,120 410,120 440,185 300,185" fill="#334155" />
+          <path d="M255 175 L265 130 L275 175" stroke="#fb7185" strokeWidth="7" fill="none" />
+          <line x1="180" y1="80" x2="120" y2="80" stroke="#67e8f9" strokeWidth="3" /><line x1="340" y1="80" x2="400" y2="80" stroke="#67e8f9" strokeWidth="3" />
+        </>}
+        {mode === "convergent" && <>
+          <polygon points="70,120 250,120 220,190 40,190" fill="#334155" />
+          <polygon points="260,120 450,120 480,190 290,190" fill="#475569" />
+          <line x1="360" y1="140" x2="220" y2="210" stroke="#94a3b8" strokeWidth="12" />
+          <line x1="130" y1="76" x2="210" y2="76" stroke="#67e8f9" strokeWidth="3" /><line x1="390" y1="76" x2="310" y2="76" stroke="#67e8f9" strokeWidth="3" />
+        </>}
+        {mode === "transform" && <>
+          <polygon points="60,120 250,120 230,195 40,195" fill="#334155" /><polygon points="270,120 460,120 480,195 290,195" fill="#334155" />
+          <line x1="260" y1="95" x2="260" y2="210" stroke="#e2e8f0" strokeWidth="2" />
+          <line x1="160" y1="86" x2="220" y2="86" stroke="#67e8f9" strokeWidth="3" /><line x1="360" y1="140" x2="300" y2="140" stroke="#67e8f9" strokeWidth="3" />
+        </>}
+      </svg>
+      <p className="absolute left-4 bottom-3 text-xs text-slate-200">클릭해 경계를 바꾸고 단면을 비교하세요.</p>
     </div>
     <p className="text-sm text-slate-200">{current.desc}</p>
     <div className="space-y-3 text-sm">

@@ -11,6 +11,11 @@ const layers = [
 ];
 
 export default function AtmosphereExplorer(){const [selected,setSelected]=useState(layers[0]);
-return <div className="space-y-4"><div className="grid md:grid-cols-[1fr_0.9fr] gap-3"><div className="space-y-2">{layers.map(l=><button key={l.id} onClick={()=>setSelected(l)} className={`w-full text-left p-3 rounded-xl border ${selected.id===l.id?"border-cyan-300 bg-cyan-500/15":"border-white/15"}`}><p className="font-medium">{l.name}</p><p className="text-xs text-slate-300">{l.alt}</p></button>)}</div><svg viewBox="0 0 300 200" className="w-full h-52"><polyline fill="none" stroke="#67e8f9" strokeWidth="3" points="20,160 90,120 170,150 280,40"/><text x="8" y="170" fontSize="10">지표</text><text x="245" y="20" fontSize="10">고도↑</text></svg></div>
+const idx=layers.findIndex(l=>l.id===selected.id);
+return <div className="space-y-4"><div className="grid md:grid-cols-[1fr_0.9fr] gap-3"><div className="space-y-2">{layers.map(l=><button key={l.id} onClick={()=>setSelected(l)} className={`w-full text-left p-3 rounded-xl border ${selected.id===l.id?"border-cyan-300 bg-cyan-500/15":"border-white/15"}`}><p className="font-medium">{l.name}</p><p className="text-xs text-slate-300">{l.alt}</p></button>)}</div><svg viewBox="0 0 320 220" className="w-full h-56 rounded-xl border border-white/15 bg-slate-950/70"><rect x="18" y="18" width="280" height="184" fill="none" stroke="#475569"/>
+{layers.map((l,i)=><rect key={l.id} x="20" y={30+i*42} width="276" height="40" fill={i===idx?"#06b6d455":"#33415555"}/>) }
+<polyline fill="none" stroke="#67e8f9" strokeWidth="3" points="36,172 110,138 180,156 284,54"/>
+<circle cx={[36,110,180,284][idx]} cy={[172,138,156,54][idx]} r="6" fill="#22d3ee"/>
+<text x="6" y="30" fontSize="10">고도↑</text><text x="232" y="214" fontSize="10">기온 경향</text></svg></div>
 <p className="text-sm"><b>{selected.name}</b> · {selected.alt} · {selected.temp}</p><p className="text-sm text-slate-300">대표 특징: {selected.feature}</p>
 <ExamPointPanel points={[selected.exam,"온도 변화는 층마다 교대로 바뀐다"]}/><MisconceptionPanel items={[selected.mis]}/></div>;}

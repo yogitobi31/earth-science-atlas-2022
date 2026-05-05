@@ -12,6 +12,19 @@ export default function HomePage() {
   return (
     <main className="max-w-6xl mx-auto p-4 sm:p-8 space-y-4 sm:space-y-6">
       <HeroMission />
+      <section className="grid md:grid-cols-4 gap-3">
+        {[
+          ["활성 미션", "3"],
+          ["학습 진척", "62%"],
+          ["오늘 퀘스트", "2"],
+          ["개념 정확도", "88"],
+        ].map(([k,v]) => (
+          <article key={k} className="glass-panel p-4">
+            <p className="text-xs text-slate-400">{k}</p>
+            <p className="text-2xl font-semibold mt-2">{v}</p>
+          </article>
+        ))}
+      </section>
       <section className="grid lg:grid-cols-3 gap-4">{missions.map((m) => <MissionCard key={m.title} {...m} />)}</section>
       <section className="grid sm:grid-cols-3 gap-3">
         <InsightCard title="오늘의 질문" body="같은 지진인데 왜 어떤 곳은 화산이 함께 나타날까요?" />
