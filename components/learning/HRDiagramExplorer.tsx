@@ -53,7 +53,7 @@ const zones: Record<ZoneKey, ZoneContent> = {
   },
 };
 
-export default function HRDiagramExplorer() {
+export default function HRDiagramExplorer({ onZoneChange }: { onZoneChange?: (zone: ZoneKey) => void }) {
   const [selected, setSelected] = useState<ZoneKey>("main");
   const content = zones[selected];
 
@@ -78,7 +78,7 @@ export default function HRDiagramExplorer() {
         {(Object.keys(zones) as ZoneKey[]).map((key) => (
           <button
             key={key}
-            onClick={() => setSelected(key)}
+            onClick={() => { setSelected(key); onZoneChange?.(key); }}
             className={`rounded-full border px-3 py-2 text-sm transition ${selected === key ? "border-cyan-300 bg-cyan-500/20 text-cyan-100" : "border-white/20 text-slate-300 hover:border-cyan-500/40"}`}
           >
             {zones[key].name}
