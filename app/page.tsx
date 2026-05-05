@@ -4,10 +4,10 @@ import { useMemo, useState } from "react";
 import { concepts } from "@/data/concepts";
 
 const modules = [
-  { title: "지권", desc: "판 구조론, 지진파, 암석, 내부 구조", keyword: "Plate / Seismic", href: "/plate-tectonics", icon: "🌋" },
-  { title: "대기", desc: "대기권, 기압, 전향력, 온대 저기압, 태풍", keyword: "Atmosphere", href: "/atmosphere", icon: "🌪️" },
-  { title: "해양", desc: "해수 순환, 용승, 엘니뇨, 라니냐", keyword: "Ocean", href: "/ocean-circulation", icon: "🌊" },
-  { title: "천문", desc: "H-R도, 별의 진화, 천구 좌표, 은하", keyword: "Astronomy", href: "/hr-diagram", icon: "✨" },
+  { title: "지권", desc: "판 구조론, 지진파, 암석, 내부 구조", keyword: "Plate / Seismic", href: "/concepts?domain=지권", icon: "🌋" },
+  { title: "대기", desc: "대기권, 기압, 전향력, 온대 저기압, 태풍", keyword: "Atmosphere", href: "/concepts?domain=대기", icon: "🌪️" },
+  { title: "해양", desc: "해수 순환, 용승, 엘니뇨, 라니냐", keyword: "Ocean", href: "/concepts?domain=해양", icon: "🌊" },
+  { title: "천문", desc: "H-R도, 별의 진화, 천구 좌표, 은하", keyword: "Astronomy", href: "/concepts?domain=천문", icon: "✨" },
   { title: "지질 시대", desc: "상대/절대 연령, 표준 화석, 지질 시대", keyword: "Geologic Time", href: "/concepts", icon: "🪨" },
   { title: "실전 퀴즈", desc: "개념 확인, 오개념 교정, 약점 분석", keyword: "Assessment", href: "/quiz", icon: "🧠" }
 ];
