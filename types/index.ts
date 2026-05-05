@@ -10,4 +10,14 @@ export type Concept = {
   misconceptions: string[];
   relatedConcepts: string[];
   tags: string[];
+  shortIntuition: string;
+  roleInSystem: string;
+  visualType: string;
+  cause: string;
+  result: string;
+  examPatterns: string[];
+  commonMistakes: string[];
+  previousConcepts: string[];
+  nextConcepts: string[];
+  confusedWith: string[];
 };
