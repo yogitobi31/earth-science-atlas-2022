@@ -31,3 +31,11 @@ npm run build
 - 단원별 개념 지도와 시뮬레이션 강화
 - 자료 해석 섹션 실제 지도/데이터 연동
 - 교육과정 성취기준 기반 학습 분석 기능
+
+
+## Vercel 배포 설정
+Vercel settings:
+- Framework Preset: Next.js
+- Build Command: npm run build
+- Output Directory: leave blank / default
+- Do not set Output Directory to public
